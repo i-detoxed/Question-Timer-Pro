@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Voice-Activated Study Tracker</title>
+  <title>Voice-Activated Question Tracker</title>
   <style>
     * {
       margin: 0;
@@ -87,6 +87,8 @@
     .history {
       margin-top: 20px;
       text-align: left;
+      max-height: 50px; /* Limit height to show only latest record */
+      overflow: hidden;
     }
     #certificate {
       display: none;
@@ -169,25 +171,25 @@
     <button onclick="exportCertificate()">Download Certificate</button>
     <div class="history" id="history">
       <div class="history-header">
-        <h3>Today's Records</h3>
+        <h3>Latest Record</h3>
         <div class="hamburger" onclick="toggleHistory()">
           <span></span>
           <span></span>
           <span></span>
         </div>
       </div>
-      <div id="todayRecords">No records yet.</div>
-      <div id="historyList" class="history-list">No old records yet.</div>
+      <div id="latestRecord">No record yet.</div>
+      <div id="historyList" class="history-list"></div>
     </div>
   </div>
   <canvas id="certificate" width="800" height="600"></canvas>
   <script>
-    let startTime, timerInterval, isRunning = false, currentTask = 'General', records = [];
+    let startTime, timerInterval, isRunning = false, currentTask = 'General', records = [], questionCount = 0;
 
     const timerEl = document.getElementById('timer');
     const micStatus = document.getElementById('micStatus');
     const statusEl = document.getElementById('status');
-    const todayRecordsEl = document.getElementById('todayRecords');
+    const latestRecordEl = document.getElementById('latestRecord');
     const historyListEl = document.getElementById('historyList');
     const hamburger = document.querySelector('.hamburger');
     const historyList = document.querySelector('.history-list');
@@ -213,40 +215,39 @@
       clearInterval(timerInterval);
       const elapsed = Math.floor((performance.now() - startTime) / 1000);
       const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-      records.push({ date, task: currentTask, time: elapsed });
+      questionCount++; // Increment question number
+      records.push({ date, task: currentTask, question: questionCount, time: elapsed });
       renderHistory();
       statusEl.textContent = 'Stopped';
     }
 
     function resetData() {
       records = [];
+      questionCount = 0;
       renderHistory();
       statusEl.textContent = 'Reset complete';
     }
 
     function renderHistory() {
-      const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-      const todayRecords = records.filter(r => r.date === today);
-      const oldRecords = records.filter(r => r.date !== today);
-
-      // Render today's records
-      if (todayRecords.length === 0) {
-        todayRecordsEl.textContent = 'No records for today.';
+      if (records.length === 0) {
+        latestRecordEl.textContent = 'No record yet.';
+        historyListEl.textContent = '';
       } else {
-        todayRecordsEl.innerHTML = todayRecords.map(r => {
-          const t = `${String(Math.floor(r.time / 60)).padStart(2, '0')}:${String(r.time % 60).padStart(2, '0')} sec`;
-          return `<div>${r.date} ${r.task} ${t}</div>`;
-        }).join('');
-      }
+        // Show only the latest record
+        const latest = records[records.length - 1];
+        const timeStr = `${String(Math.floor(latest.time / 60)).padStart(2, '0')}:${String(latest.time % 60).padStart(2, '0')} sec`;
+        latestRecordEl.textContent = `${latest.date}, ${latest.task}, Q${latest.question}, ${timeStr}`;
 
-      // Render old records in hamburger menu
-      if (oldRecords.length === 0) {
-        historyListEl.textContent = 'No old records yet.';
-      } else {
-        historyListEl.innerHTML = oldRecords.map(r => {
-          const t = `${String(Math.floor(r.time / 60)).padStart(2, '0')}:${String(r.time % 60).padStart(2, '0')} sec`;
-          return `<div>${r.date} ${r.task} ${t}</div>`;
-        }).join('');
+        // Show all previous records in hamburger menu
+        const oldRecords = records.slice(0, -1); // Exclude the latest record
+        if (oldRecords.length === 0) {
+          historyListEl.textContent = 'No old records yet.';
+        } else {
+          historyListEl.innerHTML = oldRecords.map(r => {
+            const t = `${String(Math.floor(r.time / 60)).padStart(2, '0')}:${String(r.time % 60).padStart(2, '0')} sec`;
+            return `<div>${r.date}, ${r.task}, Q${r.question}, ${t}</div>`;
+          }).join('');
+        }
       }
     }
 
@@ -266,7 +267,7 @@
       ctx.font = '20px Poppins';
       records.forEach((r, i) => {
         const t = `${String(Math.floor(r.time / 60)).padStart(2, '0')}:${String(r.time % 60).padStart(2, '0')} sec`;
-        ctx.fillText(`${r.date} ${r.task} ${t}`, 100, 150 + i * 30);
+        ctx.fillText(`${r.date}, ${r.task}, Q${r.question}, ${t}`, 100, 150 + i * 30);
       });
       const link = document.createElement('a');
       link.download = 'study_certificate.png';
@@ -282,8 +283,8 @@
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
       recognition.lang = 'en-US';
-      recognition.interimResults = false; // Wait for final results to improve accuracy
-      recognition.maxAlternatives = 1; // Use the most likely transcription
+      recognition.interimResults = false; // Wait for final results
+      recognition.maxAlternatives = 1; // Use most confident transcription
       recognition.onstart = () => {
         micStatus.textContent = 'Microphone: Listening...';
       };
@@ -298,15 +299,16 @@
         statusEl.textContent = `Heard: ${transcript}`;
 
         // Improved command parsing
-        if (transcript === 'start') {
+        if (transcript.includes('start') && !isRunning) {
           startTimer();
-        } else if (transcript === 'stop') {
+        } else if (transcript.includes('stop') && isRunning) {
           stopTimer();
-        } else if (transcript === 'reset') {
+        } else if (transcript.includes('reset')) {
           resetData();
         } else if (transcript.startsWith('task')) {
           currentTask = transcript.replace('task', '').trim() || 'General';
           statusEl.textContent = `Task set to ${currentTask}`;
+          questionCount = 0; // Reset question count for new task
         }
       };
       navigator.mediaDevices.getUserMedia({ audio: true })
