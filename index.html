@@ -1,43 +1,305 @@
-<!-- verify.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Request</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Voice-Activated Study Tracker</title>
+<style>
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  background: #000;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  position: relative;
+  color: #fff;
+}
+
+/* Animated Stars */
+.stars {
+  width: 2px; height: 2px;
+  background: white;
+  position: absolute;
+  border-radius: 50%;
+  animation: starMove 10s linear infinite;
+}
+@keyframes starMove {
+  from { transform: translateY(0); }
+  to { transform: translateY(100vh); }
+}
+
+/* Moon */
+.moon {
+  position: absolute;
+  top: 40px; right: 40px;
+  width: 80px; height: 80px;
+  background: radial-gradient(circle, #fff, #ccc);
+  border-radius: 50%;
+  box-shadow: 0 0 60px #fff;
+}
+
+/* Rocket */
+.rocket {
+  position: absolute;
+  width: 50px; height: 50px;
+  background: url('https://img.icons8.com/emoji/48/rocket.png') no-repeat center/contain;
+  animation: flyRocket 12s linear infinite;
+}
+@keyframes flyRocket {
+  0% { transform: translateX(-60px) translateY(0); }
+  100% { transform: translateX(110vw) translateY(-100vh); }
+}
+
+.container {
+  background: rgba(0,0,0,0.8);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+  position: relative;
+}
+
+/* Hamburger Button */
+.hamburger {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #00ffcc;
+  color: #000;
+  border: none;
+  font-size: 1.5rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Slide-out Panel */
+.history-panel {
+  position: fixed;
+  top: 0;
+  right: -350px;
+  width: 300px;
+  height: 100%;
+  background: #111;
+  overflow-y: auto;
+  transition: right 0.3s ease;
+  padding: 20px;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+  z-index: 999;
+}
+.history-panel.open {
+  right: 0;
+}
+.history-panel h2 {
+  margin-bottom: 10px;
+}
+
+.timer {
+  font-size: 3rem;
+  margin: 20px 0;
+  color: #00ffcc;
+}
+
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  background: #00ffcc;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+button:hover {
+  background: #00cca3;
+}
+
+/* Records Section */
+#todayRecords {
+  margin-top: 20px;
+  text-align: left;
+}
+
+#latestRecord {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #00ffcc;
+}
+</style>
 </head>
 <body>
-    <h2>Verify to Proceed</h2>
-    <p>Please click the button below to verify your request after viewing ads.</p>
-    <button onclick="verifyAndNotify()">Verify Now</button>
 
-    <script>
-        function verifyAndNotify() {
-            // Get user ID and chat ID from URL parameter (passed by bot)
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = urlParams.get('user_id');
-            const chatId = urlParams.get('chat_id');
-            const botToken = '7609046916:AAFHpI7sUJhLuHZr3XtpK4VPDpZbZGJ6LVs'; // Replace with your bot token
-            const destination = urlParams.get('dest') || 'https://t.me/AllFreeBookspdf_bot';
+<div class="moon"></div>
+<div class="rocket"></div>
+<!-- Stars -->
+<script>
+for (let i = 0; i < 100; i++) {
+  const star = document.createElement('div');
+  star.className = 'stars';
+  star.style.top = Math.random()*100 + 'vh';
+  star.style.left = Math.random()*100 + 'vw';
+  star.style.animationDuration = (5 + Math.random()*5) + 's';
+  document.body.appendChild(star);
+}
+</script>
 
-            // Notify bot via Telegram API
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: `User ${userId} verified at ${new Date().toISOString()}`
-                })
-            }).then(() => {
-                // Redirect to destination after verification
-                window.location.href = destination;
-            }).catch(err => console.error('Notification error:', err));
-        }
-    </script>
+<div class="history-panel" id="historyPanel">
+  <h2>All Records</h2>
+  <div id="allRecords">No records yet.</div>
+</div>
+
+<div class="container">
+  <button class="hamburger" onclick="toggleHistory()">☰</button>
+  <h1>Voice-Activated Study Tracker</h1>
+  <div class="timer" id="timer">00:00</div>
+  <div id="micStatus">Microphone: Initializing...</div>
+  <div id="status">Say "start", "stop", "reset", or "task [name]"</div>
+  <button onclick="startTimer()">Start</button>
+  <button onclick="stopTimer()">Stop</button>
+  <button onclick="resetData()">Reset</button>
+  <button onclick="exportCertificate()">Download Certificate</button>
+  
+  <div id="latestRecord">Latest: None</div>
+  <div id="todayRecords">Today's Records:</div>
+</div>
+
+<canvas id="certificate" width="800" height="600" style="display:none;"></canvas>
+
+<script>
+let startTime, timerInterval, isRunning = false, currentTask = 'General', questionCount=0, records = [];
+
+const timerEl = document.getElementById('timer');
+const micStatus = document.getElementById('micStatus');
+const statusEl = document.getElementById('status');
+const latestRecordEl = document.getElementById('latestRecord');
+const todayRecordsEl = document.getElementById('todayRecords');
+const allRecordsEl = document.getElementById('allRecords');
+
+function updateTimer() {
+  const elapsed = Math.floor((performance.now()-startTime)/1000);
+  const min = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const sec = String(elapsed%60).padStart(2,'0');
+  timerEl.textContent = `${min}:${sec}`;
+}
+
+function startTimer() {
+  if(isRunning) return;
+  isRunning = true;
+  startTime = performance.now();
+  questionCount++;
+  timerInterval = setInterval(updateTimer, 500);
+  statusEl.textContent = `Timing: ${currentTask} Q${questionCount}`;
+}
+
+function stopTimer() {
+  if(!isRunning) return;
+  isRunning = false;
+  clearInterval(timerInterval);
+  const elapsed = Math.floor((performance.now()-startTime)/1000);
+  const date = new Date().toLocaleDateString('en-GB',{day:'2-digit', month:'long', year:'numeric'});
+  records.push({ date, task: currentTask, question: questionCount, time: elapsed });
+  renderToday();
+  renderLatest();
+}
+
+function resetData() {
+  records = [];
+  questionCount=0;
+  renderToday();
+  renderLatest();
+  allRecordsEl.textContent='No records yet.';
+}
+
+function formatTime(s) {
+  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')} sec`;
+}
+
+function renderToday() {
+  const today = new Date().toLocaleDateString('en-GB',{day:'2-digit', month:'long', year:'numeric'});
+  const todayRecs = records.filter(r=>r.date===today);
+  if(todayRecs.length===0){
+    todayRecordsEl.textContent="Today's Records: None";
+    return;
+  }
+  todayRecordsEl.innerHTML = "Today's Records:";
+  todayRecs.forEach(r=>{
+    const div = document.createElement('div');
+    div.textContent = `${r.date}  ${r.task} Q${r.question}  ${formatTime(r.time)}`;
+    todayRecordsEl.appendChild(div);
+  });
+}
+
+function renderLatest() {
+  if(records.length===0){
+    latestRecordEl.textContent="Latest: None";
+    return;
+  }
+  const r = records[records.length-1];
+  latestRecordEl.textContent = `Latest: ${r.date}  ${r.task} Q${r.question}  ${formatTime(r.time)}`;
+}
+
+function toggleHistory() {
+  const panel = document.getElementById('historyPanel');
+  panel.classList.toggle('open');
+  if(records.length===0){
+    allRecordsEl.textContent='No records yet.';
+    return;
+  }
+  allRecordsEl.innerHTML = records.map(r=>
+    `<div>${r.date}  ${r.task} Q${r.question}  ${formatTime(r.time)}</div>`
+  ).join('');
+}
+
+function exportCertificate() {
+  const canvas = document.getElementById('certificate');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0,0,800,600);
+  ctx.fillStyle = '#000';
+  ctx.font = '30px Poppins';
+  ctx.fillText('Study Session Certificate', 200,80);
+  ctx.font = '20px Poppins';
+  records.forEach((r,i)=>{
+    ctx.fillText(`${r.date} - ${r.task} Q${r.question}: ${formatTime(r.time)}`, 100,150 + i*30);
+  });
+  const link = document.createElement('a');
+  link.download = 'study_certificate.png';
+  link.href = canvas.toDataURL();
+  link.click();
+}
+
+// Microphone
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if(!SpeechRecognition){
+  micStatus.textContent = 'Microphone unsupported. Use Chrome.';
+}else{
+  const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.lang = 'en-US';
+  recognition.onstart = ()=>{ micStatus.textContent='Microphone: Listening...'; };
+  recognition.onerror = (e)=>{ micStatus.textContent='Error: '+e.error; };
+  recognition.onend = ()=>{ recognition.start(); };
+  recognition.onresult = (e)=>{
+    const t = e.results[e.resultIndex][0].transcript.toLowerCase().trim();
+    if(t.includes('start')) startTimer();
+    if(t.includes('stop')) stopTimer();
+    if(t.includes('reset')) resetData();
+    if(t.startsWith('task')) {
+      currentTask = t.replace('task','').trim();
+      questionCount=0;
+      statusEl.textContent = `Task set to: ${currentTask}`;
+    }
+  };
+  navigator.mediaDevices.getUserMedia({audio:true})
+    .then(()=> recognition.start())
+    .catch(e=> micStatus.textContent='Mic permission denied');
+}
+</script>
 </body>
 </html>
