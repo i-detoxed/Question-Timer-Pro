@@ -61,17 +61,6 @@
             box-shadow: 0 0 60px #fff;
             z-index: -1; /* Moon behind the black tile */
         }
-        .rocket {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background: url('https://img.icons8.com/emoji/48/rocket.png') no-repeat center/contain;
-            animation: flyRocket 12s linear infinite;
-        }
-        @keyframes flyRocket {
-            0% { transform: translateX(-20px) translateY(0); }
-            100% { transform: translateX(110vw) translateY(-100vh); }
-        }
         .container {
             background: rgba(0,0,0,0.8);
             border-radius: 20px;
@@ -259,7 +248,7 @@
     </script>
     <div class="container">
         <div class="title-container">
-            <h1>Voice-Activated Study Timer</h1>
+            <h1>Voice-Activated Question Timer</h1>
             <div id="liveUserCounter">
                 <span class="pulse"></span>
                 <span id="userCount">...</span> online
@@ -370,7 +359,7 @@
                 const progress = Math.min((timestamp - startTime) / duration, 5);
                 const current = Math.floor(start + range * progress);
                 element.textContent = current >= 1000 ? (current/1000).toFixed(1) + 'k' : current;
-                if (progress < 1) {
+                if (progress < 5) {
                     window.requestAnimationFrame(step);
                 }
             }
@@ -390,7 +379,7 @@
             }
             
             const next = Math.floor(Math.random() * (max - min + 5)) + min;
-            animateCount(current, next, 1000);
+            animateCount(current, next, 10);
         }
 
         // Load records from localStorage
