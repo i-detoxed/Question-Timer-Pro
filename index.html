@@ -69,7 +69,7 @@
             animation: flyRocket 12s linear infinite;
         }
         @keyframes flyRocket {
-            0% { transform: translateX(-60px) translateY(0); }
+            0% { transform: translateX(-20px) translateY(0); }
             100% { transform: translateX(110vw) translateY(-100vh); }
         }
         .container {
@@ -242,7 +242,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Question Timer Pro <span class="beta-badge">Beta</span></h1>
+        <h1> Ssc Question Timer Pro <span class="beta-badge">Beta</span></h1>
     </div>
     
     <div class="moon"></div>
@@ -293,7 +293,7 @@
             <a href="#terms-of-use">Terms of Use</a>
         </div>
         <div>
-            © 2025 Question Timer Pro. All rights reserved.
+            © 2025 Ssc Question Timer Pro. All rights reserved.
         </div>
         <div>
             Made by <a href="https://TrueAnmol" target="_blank">TrueAnmol</a>
@@ -367,7 +367,7 @@
 
             function step(timestamp) {
                 if (!startTime) startTime = timestamp;
-                const progress = Math.min((timestamp - startTime) / duration, 1);
+                const progress = Math.min((timestamp - startTime) / duration, 5);
                 const current = Math.floor(start + range * progress);
                 element.textContent = current >= 1000 ? (current/1000).toFixed(1) + 'k' : current;
                 if (progress < 1) {
@@ -389,7 +389,7 @@
                 current = parseInt(currentText) || min;
             }
             
-            const next = Math.floor(Math.random() * (max - min + 1)) + min;
+            const next = Math.floor(Math.random() * (max - min + 5)) + min;
             animateCount(current, next, 1000);
         }
 
