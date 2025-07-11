@@ -356,10 +356,10 @@
 
             function step(timestamp) {
                 if (!startTime) startTime = timestamp;
-                const progress = Math.min((timestamp - startTime) / duration, 5);
+                const progress = Math.min((timestamp - startTime) / duration, 0.5);
                 const current = Math.floor(start + range * progress);
                 element.textContent = current >= 1000 ? (current/1000).toFixed(1) + 'k' : current;
-                if (progress < 5) {
+                if (progress < 0.5) {
                     window.requestAnimationFrame(step);
                 }
             }
@@ -379,7 +379,7 @@
             }
             
             const next = Math.floor(Math.random() * (max - min + 5)) + min;
-            animateCount(current, next, 10);
+            animateCount(current, next, 1000);
         }
 
         // Load records from localStorage
