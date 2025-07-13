@@ -400,39 +400,65 @@
         }
 
         // Live user counter
-        function animateCount(start, end, duration) {
-            const element = document.getElementById('userCount');
-            const range = end - start;
-            let startTime = null;
+let initialCountShown = false;
+let appStartTime = Date.now();
 
-            function step(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const progress = Math.min((timestamp - startTime) / duration, 0.5);
-                const current = Math.floor(start + range * progress);
-                element.textContent = current >= 1000 ? (current/1000).toFixed(1) + 'k' : current;
-                if (progress < 0.5) {
-                    window.requestAnimationFrame(step);
-                }
-            }
+function animateCount(start, end, duration) {
+    const element = document.getElementById('userCount');
+    const range = end - start;
+    let startTime = null;
+
+    function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 0.5);
+        const current = Math.floor(start + range * progress);
+        element.textContent = current >= 1000 ? (current/1000).toFixed(1) + 'k' : current;
+        if (progress < 0.5) {
             window.requestAnimationFrame(step);
         }
+    }
+    window.requestAnimationFrame(step);
+}
 
-        function updateFakeUsers() {
-            const min = 1200;
-            const max = 10000;
-            const currentText = document.getElementById('userCount').textContent;
-            let current = min;
-            
-            if (currentText.includes('k')) {
-                current = parseFloat(currentText) * 1000;
-            } else if (currentText !== '...') {
-                current = parseInt(currentText) || min;
-            }
-            
-            const next = Math.floor(Math.random() * (max - min + 5)) + min;
-            animateCount(current, next, 1000);
-        }
+function updateFakeUsers() {
+    const twentyMinutes = 20 * 60 * 1000; // 20 minutes in milliseconds
+    const now = Date.now();
+    
+    // First time show static count
+    if (!initialCountShown) {
+        document.getElementById('userCount').textContent = '2.5k';
+        initialCountShown = true;
+        return;
+    }
+    
+    // For first 20 minutes, keep showing static count
+    if (now - appStartTime < twentyMinutes) {
+        return;
+    }
+    
+    // After 20 minutes, start random updates
+    const min = 2500;
+    const max = 10000;
+    const currentText = document.getElementById('userCount').textContent;
+    let current = min;
+    
+    if (currentText.includes('k')) {
+        current = parseFloat(currentText) * 1000;
+    } else if (currentText !== '...') {
+        current = parseInt(currentText) || min;
+    }
+    
+    const next = Math.floor(Math.random() * (max - min + 5)) + min;
+    animateCount(current, next, 1000);
+}
 
+// Initialize counter
+appStartTime = Date.now();
+updateFakeUsers(); // Show initial static count
+setTimeout(() => {
+    setInterval(updateFakeUsers, 7000); // Start updates after 20 mins
+}, 20 * 60 * 1000);
+        
         // Load records from localStorage
         function loadRecords() {
             const savedRecords = localStorage.getItem('studyRecords');
@@ -640,7 +666,7 @@
                         currentTask = taskName.charAt(0).toUpperCase() + taskName.slice(1);
                         questionCount = 0;
                         statusEl.textContent = `Task set to: ${currentTask}`;
-                        speak(`Task set to ${currentTask}`);
+                        speak(`set to ${currentTask}`);
                     }
                 } else if (transcript.includes('certificate')) {
                     exportCertificate();
