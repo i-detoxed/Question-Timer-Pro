@@ -227,9 +227,42 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        /* New fullscreen button styles */
+        .fullscreen-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 255, 204, 0.2);
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+        .fullscreen-btn:hover {
+            background: rgba(0, 255, 204, 0.4);
+        }
+        .fullscreen-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #00ffcc;
+        }
     </style>
 </head>
 <body>
+    <!-- New fullscreen button -->
+    <div class="fullscreen-btn" id="fullscreenBtn">
+        <svg viewBox="0 0 24 24">
+            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+        </svg>
+    </div>
+    
     <div class="header">
         <h1> Ssc Question Timer Pro <span class="beta-badge">Beta</span></h1>
     </div>
@@ -336,6 +369,24 @@
         const historyList = document.querySelector('.history-list');
         const instructionEl = document.getElementById('instruction');
         const synth = window.speechSynthesis;
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        // Fullscreen functionality
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+                fullscreenBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    fullscreenBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>';
+                }
+            }
+        }
+
+        fullscreenBtn.addEventListener('click', toggleFullScreen);
 
         // Speech functions
         function speak(text) {
@@ -593,12 +644,20 @@
                     }
                 } else if (transcript.includes('certificate')) {
                     exportCertificate();
+                } else if (transcript.includes('fullscreen')) {
+                    toggleFullScreen();
                 }
             };
 
             // Request microphone permission
             navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(() => {
+                .then((stream) => {
+                    // Ensure we're only using the microphone audio
+                    const audioTracks = stream.getAudioTracks();
+                    if (audioTracks.length > 0) {
+                        console.log('Using microphone:', audioTracks[0].label);
+                    }
+                    
                     recognition.start();
                     loadRecords();
                     updateFakeUsers();
