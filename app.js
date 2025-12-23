@@ -266,7 +266,7 @@ function setTask(taskName) {
     document.getElementById('currentTaskDisplay').textContent = currentTask;
     
     if (settings.voiceFeedback) {
-        speak(`Task set to ${currentTask}`);
+        speak(`set to ${currentTask}`);
     }
 }
 
