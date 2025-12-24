@@ -234,11 +234,11 @@ function processVoiceCommand(transcript) {
     console.log('🔍 Processing command:', normalizedTranscript);
 
    // Split into words for better matching
-    const words = transcript.split(' ');
+    const words = normalizedTranscript.split(' ');  // ← FIX: Use normalizedTranscript
     const firstWord = words[0];
 
     // START command
-    if (transcript === 'ON' || firstWord === 'ON') {
+    if (normalizedTranscript === 'start' || firstWord === 'start') {  // ← FIX: Use 'start' not 'ON'
         if (!isRunning) {
             console.log('✅ START command executed');
             startTimer();
@@ -247,7 +247,63 @@ function processVoiceCommand(transcript) {
         }
     } 
     // STOP command
-    else if (transcript === 'OFF' || firstWord === 'OFF') {
+    else if (normalizedTranscript === 'stop' || firstWord === 'stop') {  // ← FIX: Use 'stop' not 'OFF'
+        if (isRunning) {
+            console.log('✅ STOP command executed');
+            stopTimer();
+        } else {
+            console.log('⚠️ Timer not running');
+        }
+    } 
+    // RESET command
+    else if (normalizedTranscript === 'reset' || firstWord === 'reset') {
+        console.log('✅ RESET command executed');
+        resetData();
+    } 
+    // TASK command
+    else if (normalizedTranscript.startsWith('task ')) {  // ← FIX: Use normalizedTranscript
+        const taskName = normalizedTranscript.replace('task ', '').trim();
+        if (taskName && taskName.length > 0) {
+            console.log('✅ TASK command executed:', taskName);
+            setTask(taskName);
+        }
+    } 
+    // CERTIFICATE command
+    else if (normalizedTranscript === 'certificate' || firstWord === 'certificate' || normalizedTranscript === 'download certificate') {
+        console.log('✅ CERTIFICATE command executed');
+        exportCertificate();
+    } 
+    // FULLSCREEN command
+    else if (normalizedTranscript === 'full' || normalizedTranscript === 'fullscreen' || firstWord === 'full') {
+        console.log('✅ FULLSCREEN command executed');
+        toggleFullScreen();
+    } 
+    // ANALYSIS command
+    else if (normalizedTranscript.includes('analysis') || normalizedTranscript.includes('analyze')) {
+        console.log('✅ ANALYSIS command executed');
+        showAiAnalysis();
+    } 
+    // EXPORT command
+    else if (normalizedTranscript === 'export' || firstWord === 'export') {
+        console.log('✅ EXPORT command executed');
+        exportPdfReport();
+    } 
+    // SETTINGS command
+    else if (normalizedTranscript === 'settings' || firstWord === 'settings') {
+        console.log('✅ SETTINGS command executed');
+        showSettings();
+    } 
+    // THEME command
+    else if (normalizedTranscript.includes('theme') || normalizedTranscript.includes('toggle')) {
+        console.log('✅ THEME command executed');
+        toggleTheme();
+    } 
+    else {
+        console.log('❓ Unknown command:', normalizedTranscript);
+    }
+    } 
+    // STOP command
+    else if (transcript === 'stop' || firstWord === 'stop') {
         if (isRunning) {
             console.log('✅ STOP command executed');
             stopTimer();
