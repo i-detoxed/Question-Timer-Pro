@@ -238,7 +238,7 @@ function processVoiceCommand(transcript) {
     const firstWord = words[0];
 
     // START command
-    if (transcript === 'start' || firstWord === 'start') {
+    if (transcript === 'ON' || firstWord === 'ON') {
         if (!isRunning) {
             console.log('✅ START command executed');
             startTimer();
@@ -247,7 +247,7 @@ function processVoiceCommand(transcript) {
         }
     } 
     // STOP command
-    else if (transcript === 'stop' || firstWord === 'stop') {
+    else if (transcript === 'OFF' || firstWord === 'OFF') {
         if (isRunning) {
             console.log('✅ STOP command executed');
             stopTimer();
