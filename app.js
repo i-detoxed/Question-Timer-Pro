@@ -12,7 +12,7 @@ let analyser;
 let microphone;
 let lastCommand = '';
 let lastCommandTime = 0;
-const COMMAND_DEBOUNCE_MS = 2000; // Prevent repeat commands within 2 seconds
+const COMMAND_DEBOUNCE_MS = 3000; // Increased to 3 seconds
 
 // Audio processing for noise cancellation
 let noiseGate = { threshold: 0.5, enabled: true };
@@ -215,48 +215,91 @@ function initSpeechRecognition() {
     }
 }
 
-// ===== PROCESS VOICE COMMAND WITH DEBOUNCING =====
+// ===== PROCESS VOICE COMMAND WITH IMPROVED DEBOUNCING =====
 function processVoiceCommand(transcript) {
     const now = Date.now();
     
-    // Debounce: Ignore if same command within 2 seconds
-    if (transcript === lastCommand && (now - lastCommandTime) < COMMAND_DEBOUNCE_MS) {
+    // Normalize transcript
+    const normalizedTranscript = transcript.toLowerCase().trim();
+    
+    // Debounce: Ignore if same command within 3 seconds
+    if (normalizedTranscript === lastCommand && (now - lastCommandTime) < COMMAND_DEBOUNCE_MS) {
+        console.log('⏭️ Command ignored (debounced):', normalizedTranscript);
         return;
     }
     
-    lastCommand = transcript;
+    lastCommand = normalizedTranscript;
     lastCommandTime = now;
     
-    console.log('Voice command:', transcript);
+    console.log('🔍 Processing command:', normalizedTranscript);
 
-    // Command processing with exact matching
-    if (transcript === 'start' || transcript.endsWith('start')) {
+   // Split into words for better matching
+    const words = transcript.split(' ');
+    const firstWord = words[0];
+
+    // START command
+    if (transcript === 'start' || firstWord === 'start') {
         if (!isRunning) {
+            console.log('✅ START command executed');
             startTimer();
+        } else {
+            console.log('⚠️ Timer already running');
         }
-    } else if (transcript === 'stop' || transcript.endsWith('stop')) {
+    } 
+    // STOP command
+    else if (transcript === 'stop' || firstWord === 'stop') {
         if (isRunning) {
+            console.log('✅ STOP command executed');
             stopTimer();
+        } else {
+            console.log('⚠️ Timer not running');
         }
-    } else if (transcript.includes('reset')) {
+    } 
+    // RESET command
+    else if (transcript === 'reset' || firstWord === 'reset') {
+        console.log('✅ RESET command executed');
         resetData();
-    } else if (transcript.startsWith('task ')) {
+    } 
+    // TASK command
+    else if (transcript.startsWith('task ')) {
         const taskName = transcript.replace('task ', '').trim();
         if (taskName && taskName.length > 0) {
+            console.log('✅ TASK command executed:', taskName);
             setTask(taskName);
         }
-    } else if (transcript.includes('certificate')) {
+    } 
+    // CERTIFICATE command
+    else if (transcript === 'certificate' || firstWord === 'certificate' || transcript === 'download certificate') {
+        console.log('✅ CERTIFICATE command executed');
         exportCertificate();
-    } else if (transcript.includes('full')) {
+    } 
+    // FULLSCREEN command
+    else if (transcript === 'full' || transcript === 'fullscreen' || firstWord === 'full') {
+        console.log('✅ FULLSCREEN command executed');
         toggleFullScreen();
-    } else if (transcript.includes('analysis') || transcript.includes('analyze')) {
+    } 
+    // ANALYSIS command
+    else if (transcript.includes('analysis') || transcript.includes('analyze')) {
+        console.log('✅ ANALYSIS command executed');
         showAiAnalysis();
-    } else if (transcript.includes('export')) {
+    } 
+    // EXPORT command
+    else if (transcript === 'export' || firstWord === 'export') {
+        console.log('✅ EXPORT command executed');
         exportPdfReport();
-    } else if (transcript.includes('settings')) {
+    } 
+    // SETTINGS command
+    else if (transcript === 'settings' || firstWord === 'settings') {
+        console.log('✅ SETTINGS command executed');
         showSettings();
-    } else if (transcript.includes('theme') || transcript.includes('toggle')) {
+    } 
+    // THEME command
+    else if (transcript.includes('theme') || transcript.includes('toggle')) {
+        console.log('✅ THEME command executed');
         toggleTheme();
+    } 
+    else {
+        console.log('❓ Unknown command:', transcript);
     }
 }
 
