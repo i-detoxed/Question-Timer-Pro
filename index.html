@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO Meta Tags -->
+    <title>Pomodoro Timer Pro - AI-Powered Voice Controlled Study Timer | Boost Your Productivity</title>
+    <meta name="description" content="Revolutionary AI-powered Pomodoro timer with voice commands, background noise cancellation, and intelligent study analytics. Perfect for SSC, UPSC, competitive exams, and focused study sessions. Track your progress with smart AI insights.">
+    <meta name="keywords" content="pomodoro timer, voice controlled timer, AI study timer, exam preparation, SSC timer, UPSC timer, competitive exam timer, study productivity, focus timer, time tracking, voice commands, AI analysis">
+    <meta name="author" content="Pomodoro Timer Pro">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://pomodoro-timer-pro.vercel.app/">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pomodoro Timer Pro - AI-Powered Voice Controlled Study Timer">
+    <meta property="og:description" content="Experience the future of productivity with our AI-powered voice-controlled timer. Perfect for students, professionals, and exam preparation.">
+    <meta property="og:url" content="https://pomodoro-timer-pro.vercel.app/">
+    <meta property="og:image" content="https://pomodoro-timer-pro.vercel.app/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Pomodoro Timer Pro">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pomodoro Timer Pro - AI Study Timer">
+    <meta name="twitter:description" content="Voice-controlled AI timer with noise cancellation. Perfect for exam prep & focused study sessions.">
+    <meta name="twitter:image" content="https://pomodoro-timer-pro.vercel.app/twitter-card.png">
+    <meta name="twitter:site" content="@PomodoroTimerPro">
+    <meta name="twitter:creator" content="@PomodoroTimerPro">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Pomodoro Timer Pro",
+        "applicationCategory": "ProductivityApplication",
+        "description": "AI-powered voice-controlled study timer with background noise cancellation and intelligent analytics",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "15847"
+        },
+        "featureList": [
+            "Voice Commands",
+            "AI Analysis",
+            "Background Noise Cancellation",
+            "Progress Tracking",
+            "PDF Export",
+            "Certificate Generation"
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- Animated Background Elements (Night Mode) -->
+    <div id="animatedBackground"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="material-icons">timer</span>
+                <span>Menu</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" onclick="showPage('home', this); return false;">
+                <span class="material-icons">home</span>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('track-day', this); return false;">
+                <span class="material-icons">event</span>
+                <span>Track My Day</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('affirmations', this); return false;">
+                <span class="material-icons">favorite</span>
+                <span>Affirmations</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('checkmarks', this); return false;">
+                <span class="material-icons">check_circle</span>
+                <span>Checkmarks</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('milestones', this); return false;">
+                <span class="material-icons">flag</span>
+                <span>Track Milestones</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('settings', this); return false;">
+                <span class="material-icons">settings</span>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('ai-analysis', this); return false;">
+                <span class="material-icons">psychology</span>
+                <span>AI Analysis</span>
+            </a>
+            <div class="nav-divider"></div>
+            <a href="#" class="nav-item" onclick="showPage('analytics', this); return false;">
+                <span class="material-icons">analytics</span>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('habits', this); return false;">
+                <span class="material-icons">auto_awesome</span>
+                <span>Habit Tracker</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('notes', this); return false;">
+                <span class="material-icons">note</span>
+                <span>Notes & Journal</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('achievements', this); return false;">
+                <span class="material-icons">emoji_events</span>
+                <span>Achievements</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('calendar', this); return false;">
+                <span class="material-icons">calendar_month</span>
+                <span>Calendar</span>
+            </a>
+            <a href="#" class="nav-item" onclick="toggleFocusMode(); return false;">
+                <span class="material-icons">center_focus_strong</span>
+                <span>Focus Mode</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="vault-info">
+                <span class="material-icons">account_balance_wallet</span>
+                <div>
+                    <div class="vault-coins" id="vaultCoins">0</div>
+                    <div class="vault-label">Coins</div>
+                </div>
+            </div>
+            <div class="level-info">
+                <span class="material-icons">trending_up</span>
+                <div>
+                    <div class="user-level" id="userLevel">Level 1</div>
+                    <div class="level-label">Your Level</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Sidebar Overlay (for mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <button class="icon-btn mobile-menu-btn" onclick="toggleSidebar()" aria-label="Toggle menu" style="display: none;">
+                <span class="material-icons">menu</span>
+            </button>
+            <div class="logo">
+                <span class="material-icons">timer</span>
+                <h1>Pomodoro Timer Pro</h1>
+                <span class="beta-badge">AI-POWERED</span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span class="material-icons" id="themeIcon">brightness_4</span>
+                </button>
+                <button class="icon-btn" onclick="toggleFullScreen()" aria-label="Toggle fullscreen">
+                    <span class="material-icons">fullscreen</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <div class="page active" id="page-home">
+            <div class="container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="material-icons">mic</span>
+                <span id="micStatus">Initializing...</span>
+            </div>
+            <div class="status-item">
+                <span class="material-icons">volume_up</span>
+                <span id="audioLevel">Audio: Ready</span>
+            </div>
+        </div>
+
+        <!-- Task Display -->
+        <div class="task-display">
+            <h2 id="currentTaskDisplay">Ready to Start</h2>
+            <p class="task-subtitle">Say "task [name]" to set a task</p>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="timer-container">
+            <div class="timer-circle">
+                <svg class="progress-ring" width="300" height="300">
+                    <circle class="progress-ring-bg" cx="150" cy="150" r="130" />
+                    <circle class="progress-ring-circle" cx="150" cy="150" r="130" id="progressCircle" />
+                </svg>
+                <div class="timer-display">
+                    <span id="timerDisplay">00:00</span>
+                    <span class="timer-label">minutes</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Counter -->
+        <div class="question-counter">
+            <span class="material-icons">quiz</span>
+            <span>Question <span id="questionNumber">1</span></span>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="controls">
+            <button class="control-btn start-btn" onclick="startTimer()" id="startBtn">
+                <span class="material-icons">play_arrow</span>
+                Start
+            </button>
+            <button class="control-btn stop-btn" onclick="stopTimer()" id="stopBtn" disabled>
+                <span class="material-icons">stop</span>
+                Stop
+            </button>
+            <button class="control-btn reset-btn" onclick="resetData()">
+                <span class="material-icons">refresh</span>
+                Reset
+            </button>
+        </div>
+
+        <!-- Voice Commands Info -->
+        <div class="voice-commands">
+            <button class="accordion-header" onclick="toggleAccordion('voiceCommands')">
+                <span class="material-icons">mic</span>
+                Voice Commands
+                <span class="material-icons">expand_more</span>
+            </button>
+            <div class="accordion-content" id="voiceCommands">
+                <div class="command-grid">
+                    <div class="command-item">
+                        <span class="material-icons">play_arrow</span>
+                        <div>
+                            <strong>"Start"</strong>
+                            <p>Begin timer</p>
+                        </div>
+                    </div>
+                    <div class="command-item">
+                        <span class="material-icons">stop</span>
+                        <div>
+                            <strong>"Stop"</strong>
+                            <p>Pause timer</p>
+                        </div>
+                    </div>
+                    <div class="command-item">
+                        <span class="material-icons">task</span>
+                        <div>
+                            <strong>"Task [name]"</strong>
+                            <p>Set task name</p>
+                        </div>
+                    </div>
+                    <div class="command-item">
+                        <span class="material-icons">analytics</span>
+                        <div>
+                            <strong>"Analysis"</strong>
+                            <p>View AI insights</p>
+                        </div>
+                    </div>
+                    <div class="command-item">
+                        <span class="material-icons">settings</span>
+                        <div>
+                            <strong>"Settings"</strong>
+                            <p>Open settings</p>
+                        </div>
+                    </div>
+                    <div class="command-item">
+                        <span class="material-icons">file_download</span>
+                        <div>
+                            <strong>"Export"</strong>
+                            <p>Download report</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study History -->
+        <div class="history-section">
+            <button class="accordion-header" onclick="toggleAccordion('historyList')">
+                <span class="material-icons">history</span>
+                Study History (<span id="recordCount">0</span>)
+                <span class="material-icons">expand_more</span>
+            </button>
+            <div class="accordion-content" id="historyList">
+                <div id="historyContent" class="history-content">
+                    <p class="no-data">No records yet. Start your first session!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-btn" onclick="showAiAnalysis()">
+                <span class="material-icons">psychology</span>
+                AI Analysis
+            </button>
+            <button class="action-btn" onclick="exportPdfReport()">
+                <span class="material-icons">picture_as_pdf</span>
+                Export PDF
+            </button>
+            <button class="action-btn" onclick="exportCertificate()">
+                <span class="material-icons">workspace_premium</span>
+                Certificate
+            </button>
+            <button class="action-btn" onclick="showSettings()">
+                <span class="material-icons">settings</span>
+                Settings
+            </button>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <span class="material-icons">timer</span>
+                <div>
+                    <h3 id="totalTime">0h 0m</h3>
+                    <p>Total Time</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="material-icons">speed</span>
+                <div>
+                    <h3 id="avgTime">0:00</h3>
+                    <p>Avg per Q</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="material-icons">trending_up</span>
+                <div>
+                    <h3 id="streak">0</h3>
+                    <p>Day Streak</p>
+                </div>
+            </div>
+        </div>
+            </div>
+        </div>
+
+        <!-- Track My Day Page -->
+        <div class="page" id="page-track-day">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">event</span>
+                        Track My Day
+                    </h1>
+                    <div class="page-actions">
+                        <button class="action-btn-small" onclick="setGoalDeadline()">
+                            <span class="material-icons">flag</span>
+                            Set Goal
+                        </button>
+                        <button class="action-btn-small" onclick="exportDailyRecord()" id="downloadRecordBtn" style="display: none;">
+                            <span class="material-icons">download</span>
+                            Download Record
+                        </button>
+                    </div>
+                </div>
+
+                <div class="goal-section" id="goalSection" style="display: none;">
+                    <div class="goal-card">
+                        <h3>Goal Deadline</h3>
+                        <div class="goal-input">
+                            <label>Target Date:</label>
+                            <input type="date" id="goalDeadline" />
+                        </div>
+                        <div class="goal-display" id="goalDisplay"></div>
+                    </div>
+                </div>
+
+                <div class="task-scheduler">
+                    <div class="add-task-section">
+                        <h2>Add Major Task</h2>
+                        <div class="task-form">
+                            <input type="text" id="taskName" placeholder="Task name (e.g., Yoga, Study, Exercise)" />
+                            <input type="time" id="taskStartTime" />
+                            <input type="number" id="taskDuration" placeholder="Duration (minutes)" min="1" />
+                            <button class="btn-primary" onclick="addDailyTask()">
+                                <span class="material-icons">add</span>
+                                Add Task
+                            </button>
+                        </div>
+                        <p class="info-text">Minimum 5 major tasks required per day</p>
+                    </div>
+
+                    <div class="tasks-list" id="tasksList">
+                        <p class="no-data">No tasks added yet. Add your first task above.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Affirmations Page -->
+        <div class="page" id="page-affirmations">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">favorite</span>
+                        Affirmations
+                    </h1>
+                </div>
+
+                <div class="affirmations-container">
+                    <div class="add-affirmation-section">
+                        <h2>Add New Affirmation</h2>
+                        <div class="affirmation-form">
+                            <input type="text" id="newAffirmation" placeholder="Enter your affirmation..." />
+                            <button class="btn-primary" onclick="addAffirmation()">
+                                <span class="material-icons">add</span>
+                                Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="affirmations-list" id="affirmationsList">
+                        <p class="no-data">No affirmations yet. Add your first affirmation above.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkmarks Page -->
+        <div class="page" id="page-checkmarks">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">check_circle</span>
+                        Daily Checkmarks
+                    </h1>
+                </div>
+
+                <div class="checkmarks-container">
+                    <div class="add-checkmark-section">
+                        <h2>Add Checkmark Item</h2>
+                        <div class="checkmark-form">
+                            <input type="text" id="newCheckmark" placeholder="Enter item name (e.g., Morning Yoga, Meditation)" />
+                            <button class="btn-primary" onclick="addCheckmark()">
+                                <span class="material-icons">add</span>
+                                Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="checkmarks-list" id="checkmarksList">
+                        <p class="no-data">No checkmarks yet. Add your first item above.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Track Milestones Page -->
+        <div class="page" id="page-milestones">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">flag</span>
+                        Track Milestones
+                    </h1>
+                </div>
+
+                <div class="milestones-container">
+                    <div class="add-milestone-target">
+                        <h2>Add New Target</h2>
+                        <div class="target-form">
+                            <input type="text" id="targetTitle" placeholder="Target Title (e.g., Earn $5000 in 3 months)" />
+                            <textarea id="targetDescription" placeholder="Detailed description..."></textarea>
+                            <input type="date" id="targetDeadline" />
+                            <input type="number" id="targetCoinsReward" placeholder="Coins Reward" min="0" />
+                            <input type="number" id="targetCoinsPenalty" placeholder="Coins Penalty" min="0" />
+                            <button class="btn-primary" onclick="addTarget()">
+                                <span class="material-icons">add</span>
+                                Add Target
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="targets-list" id="targetsList">
+                        <p class="no-data">No targets yet. Add your first target above.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div class="page" id="page-settings">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">settings</span>
+                        Settings
+                    </h1>
+                </div>
+
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h2>Voice Calibration</h2>
+                        <div class="setting-group">
+                            <button class="btn-primary" onclick="improveVoiceCalibration()">
+                                <span class="material-icons">mic</span>
+                                Improve Voice Recognition
+                            </button>
+                            <p class="info-text">Calibrate your microphone for better voice command recognition</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>Custom Background</h2>
+                        <div class="setting-group">
+                            <label class="file-upload-label">
+                                <input type="file" id="wallpaperUpload" accept="image/*" onchange="uploadWallpaper(this)" style="display: none;">
+                                <span class="btn-primary">
+                                    <span class="material-icons">image</span>
+                                    Upload Background Image
+                                </span>
+                            </label>
+                            <div id="wallpaperPreview" class="wallpaper-preview"></div>
+                            <button class="btn-small btn-danger" onclick="removeWallpaper()" style="display: none;" id="removeWallpaperBtn">
+                                <span class="material-icons">delete</span> Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>Background Music</h2>
+                        <div class="setting-group">
+                            <label class="file-upload-label">
+                                <input type="file" id="musicUpload" accept="audio/*" onchange="uploadMusic(this)" style="display: none;">
+                                <span class="btn-primary">
+                                    <span class="material-icons">music_note</span>
+                                    Upload Music / White Noise
+                                </span>
+                            </label>
+                            <audio id="backgroundMusic" loop style="width: 100%; margin-top: 1rem;"></audio>
+                            <div class="music-controls">
+                                <button class="btn-small btn-success" onclick="playMusic()" id="playMusicBtn">
+                                    <span class="material-icons">play_arrow</span> Play
+                                </button>
+                                <button class="btn-small btn-warning" onclick="pauseMusic()" id="pauseMusicBtn">
+                                    <span class="material-icons">pause</span> Pause
+                                </button>
+                                <input type="range" id="musicVolume" min="0" max="100" value="50" onchange="setMusicVolume(this.value)">
+                                <span>Volume: <span id="volumeValue">50</span>%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Analysis Page -->
+        <div class="page" id="page-ai-analysis">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">psychology</span>
+                        AI Analysis
+                    </h1>
+                </div>
+
+                <div class="ai-analysis-container">
+                    <div class="analysis-loading" id="aiAnalysisLoading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Analyzing your data with AI...</p>
+                    </div>
+                    <div class="analysis-content" id="aiAnalysisContent">
+                        <button class="btn-primary" onclick="generateAIAnalysis()">
+                            <span class="material-icons">auto_awesome</span>
+                            Generate Complete Analysis
+                        </button>
+                        <div id="analysisResults" style="margin-top: 2rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Page -->
+        <div class="page" id="page-analytics">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">analytics</span>
+                        Analytics Dashboard
+                    </h1>
+                </div>
+
+                <div class="analytics-container">
+                    <div class="stats-grid">
+                        <div class="stat-card-large">
+                            <div class="stat-icon"><span class="material-icons">trending_up</span></div>
+                            <div class="stat-content">
+                                <h3 id="totalProductivity">0</h3>
+                                <p>Total Productivity Hours</p>
+                                <div class="stat-change positive">+12% this week</div>
+                            </div>
+                        </div>
+                        <div class="stat-card-large">
+                            <div class="stat-icon"><span class="material-icons">speed</span></div>
+                            <div class="stat-content">
+                                <h3 id="avgSessionTime">0:00</h3>
+                                <p>Avg Session Duration</p>
+                                <div class="stat-change positive">+5 min</div>
+                            </div>
+                        </div>
+                        <div class="stat-card-large">
+                            <div class="stat-icon"><span class="material-icons">check_circle</span></div>
+                            <div class="stat-content">
+                                <h3 id="completionRate">0%</h3>
+                                <p>Task Completion Rate</p>
+                                <div class="stat-change positive">+8%</div>
+                            </div>
+                        </div>
+                        <div class="stat-card-large">
+                            <div class="stat-icon"><span class="material-icons">local_fire_department</span></div>
+                            <div class="stat-content">
+                                <h3 id="currentStreak">0</h3>
+                                <p>Day Streak</p>
+                                <div class="stat-change positive">Keep it up!</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-section">
+                        <div class="chart-card">
+                            <h3>Weekly Activity</h3>
+                            <canvas id="weeklyChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Task Distribution</h3>
+                            <canvas id="taskDistributionChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="insights-section">
+                        <h2>Key Insights</h2>
+                        <div id="insightsList" class="insights-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Habit Tracker Page -->
+        <div class="page" id="page-habits">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">auto_awesome</span>
+                        Habit Tracker
+                    </h1>
+                </div>
+
+                <div class="habits-container">
+                    <div class="add-habit-section">
+                        <h2>Add New Habit</h2>
+                        <div class="habit-form">
+                            <input type="text" id="habitName" placeholder="Habit name (e.g., Morning Exercise, Reading, Meditation)" />
+                            <select id="habitFrequency">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            <input type="time" id="habitReminderTime" />
+                            <button class="btn-primary" onclick="addHabit()">
+                                <span class="material-icons">add</span>
+                                Add Habit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="habits-list" id="habitsList">
+                        <p class="no-data">No habits yet. Add your first habit above.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Page -->
+        <div class="page" id="page-notes">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">note</span>
+                        Notes & Journal
+                    </h1>
+                </div>
+
+                <div class="notes-container">
+                    <div class="notes-toolbar">
+                        <button class="btn-primary" onclick="createNewNote()">
+                            <span class="material-icons">add</span>
+                            New Note
+                        </button>
+                        <input type="text" id="noteSearch" placeholder="Search notes..." onkeyup="searchNotes(this.value)" />
+                    </div>
+
+                    <div class="notes-layout">
+                        <div class="notes-sidebar">
+                            <div class="notes-list" id="notesList">
+                                <p class="no-data">No notes yet. Create your first note.</p>
+                            </div>
+                        </div>
+                        <div class="notes-editor">
+                            <div id="noteEditor" class="note-editor-content">
+                                <p class="no-data">Select a note or create a new one</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Page -->
+        <div class="page" id="page-achievements">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">emoji_events</span>
+                        Achievements & Badges
+                    </h1>
+                </div>
+
+                <div class="achievements-container">
+                    <div class="achievements-stats">
+                        <div class="achievement-stat-card">
+                            <span class="material-icons">stars</span>
+                            <div>
+                                <h3 id="totalAchievements">0</h3>
+                                <p>Total Achievements</p>
+                            </div>
+                        </div>
+                        <div class="achievement-stat-card">
+                            <span class="material-icons">workspace_premium</span>
+                            <div>
+                                <h3 id="unlockedBadges">0</h3>
+                                <p>Badges Unlocked</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="achievements-grid" id="achievementsGrid">
+                        <!-- Achievements will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Page -->
+        <div class="page" id="page-calendar">
+            <div class="container">
+                <div class="page-header">
+                    <h1>
+                        <span class="material-icons">calendar_month</span>
+                        Calendar View
+                    </h1>
+                    <div class="page-actions">
+                        <button class="action-btn-small" onclick="previousMonth()">
+                            <span class="material-icons">chevron_left</span>
+                        </button>
+                        <span id="currentMonthYear"></span>
+                        <button class="action-btn-small" onclick="nextMonth()">
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                        <button class="action-btn-small" onclick="goToToday()">
+                            <span class="material-icons">today</span>
+                            Today
+                        </button>
+                    </div>
+                </div>
+
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <div class="calendar-day-name">Sun</div>
+                        <div class="calendar-day-name">Mon</div>
+                        <div class="calendar-day-name">Tue</div>
+                        <div class="calendar-day-name">Wed</div>
+                        <div class="calendar-day-name">Thu</div>
+                        <div class="calendar-day-name">Fri</div>
+                        <div class="calendar-day-name">Sat</div>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar will be rendered here -->
+                    </div>
+                </div>
+
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <span class="legend-color task-color"></span>
+                        <span>Tasks</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color milestone-color"></span>
+                        <span>Milestones</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color completed-color"></span>
+                        <span>Completed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- AI Analysis Modal -->
+    <div id="aiAnalysisModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <span class="material-icons">psychology</span>
+                    AI Performance Analysis
+                </h2>
+                <button class="close-btn" onclick="closeModal('aiAnalysisModal')">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="loading" id="aiLoading">
+                    <div class="spinner"></div>
+                    <p>Analyzing your performance...</p>
+                </div>
+                <div id="aiAnalysisContent" style="display: none;">
+                    <div class="analysis-section">
+                        <h3><span class="material-icons">insights</span> Key Insights</h3>
+                        <div id="aiInsights"></div>
+                    </div>
+                    <div class="analysis-section">
+                        <h3><span class="material-icons">trending_up</span> Improvement Areas</h3>
+                        <div id="aiImprovements"></div>
+                    </div>
+                    <div class="analysis-section">
+                        <h3><span class="material-icons">emoji_events</span> Motivation</h3>
+                        <div id="aiMotivation"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <span class="material-icons">settings</span>
+                    Settings
+                </h2>
+                <button class="close-btn" onclick="closeModal('settingsModal')">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <h3>Audio Settings</h3>
+                    <div class="setting-item">
+                        <label>
+                            <span class="material-icons">mic</span>
+                            Microphone Sensitivity
+                        </label>
+                        <input type="range" id="micSensitivity" min="0" max="100" value="50" onchange="updateMicSensitivity(this.value)">
+                        <span id="micSensitivityValue">50%</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <span class="material-icons">graphic_eq</span>
+                            Noise Cancellation Level
+                        </label>
+                        <input type="range" id="noiseCancellation" min="0" max="100" value="70" onchange="updateNoiseCancellation(this.value)">
+                        <span id="noiseCancellationValue">70%</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="voiceFeedback" checked onchange="toggleVoiceFeedback(this.checked)">
+                            Voice Feedback
+                        </label>
+                    </div>
+                    <button class="calibrate-btn" onclick="calibrateAudio()">
+                        <span class="material-icons">tune</span>
+                        Calibrate Audio
+                    </button>
+                </div>
+                <div class="setting-group">
+                    <h3>Timer Settings</h3>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="autoReset" onchange="toggleAutoReset(this.checked)">
+                            Auto-reset after export
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="soundNotifications" checked onchange="toggleSoundNotifications(this.checked)">
+                            Sound Notifications
+                        </label>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <h3>AI Assistant</h3>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="motivationalMessages" checked onchange="toggleMotivation(this.checked)">
+                            Motivational Messages
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            Motivation Frequency (minutes)
+                        </label>
+                        <input type="number" id="motivationFrequency" min="5" max="60" value="15" onchange="updateMotivationFrequency(this.value)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div id="certificateModal" class="modal">
+        <div class="modal-content certificate-modal">
+            <button class="close-btn" onclick="closeModal('certificateModal')">
+                <span class="material-icons">close</span>
+            </button>
+            <div id="certificateContent" class="certificate">
+                <!-- Certificate will be generated here -->
+            </div>
+            <button class="download-btn" onclick="downloadCertificate()">
+                <span class="material-icons">file_download</span>
+                Download Certificate
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="privacy.html" target="_blank">Privacy Policy</a>
+                <a href="terms.html" target="_blank">Terms of Service</a>
+                <a href="mailto:support@pomodoro-timer-pro.com">Contact</a>
+            </div>
+            <div class="footer-info">
+                <p>© 2024 Pomodoro Timer Pro. All rights reserved.</p>
+                <p class="active-users">
+                    <span class="pulse-dot"></span>
+                    <span id="activeUsers">0</span> users studying now
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

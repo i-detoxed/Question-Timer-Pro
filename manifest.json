@@ -1,0 +1,45 @@
+{
+  "name": "Pomodoro Timer Pro",
+  "short_name": "Pomodoro Pro",
+  "description": "AI-Powered Voice Controlled Study Timer with Daily Task Tracking",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["productivity", "education"],
+  "shortcuts": [
+    {
+      "name": "Track My Day",
+      "short_name": "Track Day",
+      "description": "Manage your daily tasks",
+      "url": "/?page=track-day",
+      "icons": [{ "src": "favicon-32x32.png", "sizes": "32x32" }]
+    },
+    {
+      "name": "Affirmations",
+      "short_name": "Affirm",
+      "description": "Practice affirmations",
+      "url": "/?page=affirmations",
+      "icons": [{ "src": "favicon-32x32.png", "sizes": "32x32" }]
+    }
+  ]
+}
+
